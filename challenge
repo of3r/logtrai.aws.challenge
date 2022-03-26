@@ -1,0 +1,39 @@
+import boto3
+import json
+import datetime
+from datetime import *
+
+
+client = boto3.client('cloudtrail','us-east-1')
+
+Stime_in = input('enter query START time  yyyy,mm,dd  :')
+Stime = datetime.strptime(Stime_in, '%Y,%m,%d')
+Etime_in = input('enter query END time yyyy,mm,dd  :')
+Etime = datetime.strptime(Etime_in, '%Y,%m,%d')
+EventName = input( 'Enter query EventName  ')
+
+response = client.lookup_events(
+
+    LookupAttributes=[
+        {
+            'AttributeKey': 'EventName',
+            'AttributeValue': EventName
+        },
+    ],
+    StartTime=Stime,
+    EndTime=Etime
+
+)
+
+event_list=response['Events']
+print ('      RESULTS       ')
+print ('++++++++++++++++++++++++++++++')
+for event in event_list:
+    print ('EventName is : ' + event['EventName'])
+    print ('UserName used the Event is : ' + event['Username'])
+    print ('Time The Event Used : ' + str(event['EventTime']))
+    print ("+++++++++++++++++++++++++++++++")
+
+
+print ('-----------------END----------------------')
+
